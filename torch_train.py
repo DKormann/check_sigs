@@ -110,6 +110,6 @@ for i in range(1000):
   x,y,labels = getsample(10)
   loss = train_step(x, y, labels)
   print(f'\r loss: {loss.item():6.2f} ', end='')
-  if i % 10 == 0: test()
+  if not i or (i-1) % 10 == 0: test()
 
 # %%

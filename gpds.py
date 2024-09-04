@@ -65,12 +65,14 @@ class Model(nn.Module):
       nn.Conv2d(128, 256, 3), nn.ReLU(), nn.Conv2d(256, 128, 3),
       nn.LayerNorm([128, 39, 64]), nn.MaxPool2d(2), nn.ReLU(), nn.Flatten(),
       nn.Linear(128*19*32, 2**13),
+      nn.ReLU(), nn.Linear(2**13, 2**7),
     )
   
   def forward(self, x): return self.blocks(x.unsqueeze(1))
 
 
 EPOCHS=1000
+torch.manual_seed(0)
 model = Model().to(device)
 opt = torch.optim.Adam(model.parameters(), lr=1e-3)
 
@@ -90,7 +92,7 @@ def trainstep(x, y, labels):
   return loss.detach().cpu().numpy()
 
 
-def test():
+def test(plot = False):
   model.eval()
   with torch.no_grad():
 
@@ -101,13 +103,18 @@ def test():
     loss = torch.nn.functional.cosine_embedding_loss(xembed, yembed, targets).detach().cpu().numpy()
 
     sims = torch.nn.functional.cosine_similarity(xembed, yembed).detach().cpu().numpy()
+
     genuine_sims = sims[:30]
     forge_sims = sims[30:]
+
+    if plot:
+      plt.hist(genuine_sims, bins=20, alpha=0.5, label='genuine')
+      plt.hist(forge_sims, bins=20, alpha=0.5, label='forge')
 
     acc, d = max((np.concatenate([genuine_sims>d, forge_sims<=d]).mean(),d) for d in np.linspace(0, 1, 101))
     return f' loss: {loss:6.2f}  best d:{d:5.2f} accuracy: {acc*100:6.2f}%'
 
-test()
+print(test(plot=True))
 
 #%%
 bs = 20
@@ -116,7 +123,9 @@ for i in range(EPOCHS):
   x,y,labels = getsample(bs)
   loss = trainstep(x, y, labels)
   print(f'\r{i}: {loss:6.2f}', end='')
-  if i % 10 == 0: print(test())
+  if not i or (i+1) % 10 == 0: print(test())
+
+test(True)
 
 #%%
 for i in range(20):
