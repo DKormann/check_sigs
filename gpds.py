@@ -9,9 +9,9 @@ import tqdm
 
 #%%
 
-device="cuda:1"
+device = "cuda:1"
 
-maxsize = [1400, 2200]
+maxsize = [1400, 2100]
 datapath = '/shared/datasets/signatures/GPDS150'
 
 def loadimage(path):
@@ -111,7 +111,9 @@ def test(plot = False):
       plt.hist(genuine_sims, bins=20, alpha=0.5, label='genuine')
       plt.hist(forge_sims, bins=20, alpha=0.5, label='forge')
 
-    acc, d = max((np.concatenate([genuine_sims>d, forge_sims<=d]).mean(),d) for d in np.linspace(0, 1, 101))
+    # acc, d = max((np.concatenate([genuine_sims>d, forge_sims<=d]).mean(),d) for d in np.linspace(0, 1, 101))
+    d = 0.7
+    acc = np.concatenate([genuine_sims>d, forge_sims<=d]).mean()
     return f' loss: {loss:6.2f}  best d:{d:5.2f} accuracy: {acc*100:6.2f}%'
 
 print(test(plot=True))
@@ -125,18 +127,4 @@ for i in range(EPOCHS):
   print(f'\r{i}: {loss:6.2f}', end='')
   if not i or (i+1) % 10 == 0: print(test())
 
-test(True)
-
-#%%
-for i in range(20):
-  k = i
-
-  g = test_genuine[k:k+1,0].to(dtype=torch.float32, device = device)
-  f= test_genuine[k:k+1,2].to(dtype=torch.float32, device = device)
-
-  genuine_embed = model(g)
-  forge_embed = model(f)
-
-  similarity = torch.nn.functional.cosine_similarity(genuine_embed, forge_embed)
-
-  print(similarity)
+_ = test(True)
