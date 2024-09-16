@@ -74,7 +74,10 @@ class Model(nn.Module):
     return self.blocks(x)
 
 
+model = torch.load('model.pth')
 model = Model().to('cuda')
+
+
 opt = torch.optim.Adam(model.parameters(), lr=1e-3)
 p = model(x)
 # %%

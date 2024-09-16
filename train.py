@@ -84,6 +84,10 @@ class Model():
     return z.sequential(self.join)
 
 model = Model()
+
+model.load_state_dict(Tensor.load('model_pretrained_e_10000.pth'))
+import torch
+torch.load('model_pretrained_e_10000.pth')
 opt = nn.optim.Adam(nn.state.get_parameters(model.layers))
 
 
