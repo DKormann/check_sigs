@@ -34,7 +34,7 @@ def sample(n=40, datapath = datapath,ds_offset=0, ds_size= 10_000, b_size= 24)->
 #%%
 
 # non random sampling for test
-def test_sample(datapath = datapath, ds_size = 20, b_size = 24):
+def test_sample(datapath = datapath, ds_size = 20, b_size = 24, img_format='jpg'):
   n = np.concatenate([np.arange(ds_size*2)]) % ds_size +1
   label = np.concatenate([np.zeros(ds_size), np.ones(ds_size)])
   r,f,labs = [], [], []
@@ -42,9 +42,10 @@ def test_sample(datapath = datapath, ds_size = 20, b_size = 24):
   for n, l in zip(n, label):
     for i in range(1,img_per_set+1):
       i_ = (i+1) % img_per_set + 1
-      r.append(loadimage(datapath + f"/genuine/{n:03}/c-{n:03}-{i:0>2}.jpg"))
-      f.append(loadimage(datapath + (f"/genuine/{n:03}/c-{n:03}-{i_:0>2}.jpg" if l else f"/forged/{n:03}/cf-{n:03}-{i:0>2}.jpg")))
+      r.append(loadimage(datapath + f"/genuine/{n:03}/c-{n:03}-{i:0>2}.{img_format}"))
+      f.append(loadimage(datapath + (f"/genuine/{n:03}/c-{n:03}-{i_:0>2}.{img_format}" if l else f"/forged/{n:03}/cf-{n:03}-{i:0>2}.{img_format}")))
       labs.append(l)
   return np.stack(r)/255.0, np.stack(f)/255.0, np.array(labs)
 
-  
+
+
