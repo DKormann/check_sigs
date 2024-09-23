@@ -1,0 +1,76 @@
+
+
+
+
+body{
+
+  --blue: rgb(129, 129, 255);
+  --bg: rgb(233, 233, 255);
+  --pink: rgb(151, 40, 255);
+  --color: rgb(0, 0, 128);
+  --red: rgb(255, 0, 0);
+  --green: rgb(0, 255, 0);
+
+
+
+  background-color: var(--bg);
+  text-align: center;
+  color: var(--color);
+  font-family: monospace;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  body {
+    --bg: rgb(18, 18, 18);
+    --blue: rgb(0, 221, 255);
+    --pink: rgb(255, 105, 180);
+    --color: rgb(220, 220, 220);
+
+    background-color: var(--bg);
+    color: var(--color);
+  }
+}
+
+h1{
+  margin-top: .5em;
+  margin-bottom: .2em;
+  font-size: 10vh;
+  color: var(--blue);
+  text-shadow: 2px 2px 4px var(--blue);
+  box-shadow: 0px 4px 0px var(--blue);
+  width: min-content;
+  margin: auto;
+}
+
+#face{
+  margin-bottom: 6vh;
+}
+
+#face>h3{
+  color: var(--blue);
+}
+
+table{
+  margin: auto;
+  width: 80%;
+  /* border:1px solid gold; */
+}
+
+td{
+  width:20vh;
+}
+
+p.label{
+  font-size: 3vh;
+  font-weight: bold;
+  color: var(--green);
+}
+
+p.label.forge{
+  color: var(--red);
+}
+
+p.prediction{
+  font-size: 3vh;
+}
